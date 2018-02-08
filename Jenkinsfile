@@ -12,10 +12,12 @@ node (''){
 node('') {
 
     // Bundles up the current directory and sends it to OpenShift to run the s2i.
-    stage('Build Image') {
+    stage('s2i Build Image') {
         sh "oc start-build ${env.APP_NAME} --follow"
     }
-
+    stage('Promote to Dev') {
+        input "Promote Application to Dev?"
+    }
 
     // no user changes should be needed below this point
     stage ('Deploy to Dev') {
@@ -25,7 +27,7 @@ node('') {
     }
 
     stage ('Deploy to Demo') {
-        input "Promote Application to Demo?"
+        
 
         openshiftTag (apiURL: "${env.OCP_API_SERVER}", authToken: "${env.OCP_TOKEN}", destStream: "${env.APP_NAME}", destTag: 'latest', destinationAuthToken: "${env.OCP_TOKEN}", destinationNamespace: "${env.NAMESPACE_DEMO}", namespace: "${env.NAMESPACE_DEV}", srcStream: "${env.APP_NAME}", srcTag: 'latest')
 
