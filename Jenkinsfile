@@ -27,7 +27,7 @@ node('') {
     }
 
     stage ('Deploy to Demo') {
-        
+        input "Promote to Demo?"
 
         openshiftTag (apiURL: "${env.OCP_API_SERVER}", authToken: "${env.OCP_TOKEN}", destStream: "${env.APP_NAME}", destTag: 'latest', destinationAuthToken: "${env.OCP_TOKEN}", destinationNamespace: "${env.NAMESPACE_DEMO}", namespace: "${env.NAMESPACE_DEV}", srcStream: "${env.APP_NAME}", srcTag: 'latest')
 
